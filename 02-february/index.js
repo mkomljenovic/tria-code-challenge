@@ -1,4 +1,4 @@
-// Write a function that takes an array of strings of arbitrary dimensionality ([], [][], [][][], etc.) and returns the sum of every separate number in each string in the array.
+// Write flattenedArray function that takes an array of strings of arbitrary dimensionality ([], [][], [][][], etc.) and returns the sum of every separate number in each string in the array.
 
 // - Numbers in strings can be negative, but will all be base-10 integers.
 // - Negative numbers may directly follow another number.
@@ -12,25 +12,53 @@
 // sum([[["1"], "10v3"], ["738h"], [["s0"], ["1mu4ch3"],"-1s0"]]) ➞ 759
 
 const sum = (arr) => {
-  // Flat the array with the depth of 2, for this example, can be Infinity
-  let flattenArr = arr.flat(2);
-  let cleanedArrInt = [];
-  for (let i = 0; i < flattenArr.length; i++) {
-    // Clean the flattened array, remove NaNs
-    if (parseInt(flattenArr[i]) == flattenArr[i]) {
-      cleanedArrInt.push(flattenArr[i]);
-    } else {
-      // Loop through the array to return the unclean integers eg. thr33 => 33
-      for (let j = 0; j < flattenArr[i].length; j++) {
-          
-      }
+    // Flat the array with the depth, it can range from empty to Infinity, for this task I will use 5, but it is adjustable
+    let flattenedArray = arr.flat(5);
+    // Initialize clean array
+    let cleanedArray = [];
+    let stringedChars = "";
+    let gatherAllChars = [];
+    let sumAllChars = 0;
+    // Loop through the flatten array to find the clean numbers first
+    for (let i = 0; i < flattenedArray.length; i++) {
+      if (parseInt(flattenedArray[i]) == flattenedArray[i]) {
+        // Push the clean numbers from all arrays
+        cleanedArray.push(flattenedArray[i]);
+      } else {
+          // All the "unclean" numbers or empty strings goes here to loop once again
+          for (let j = 0; j < flattenedArray[i].length; j++) {
+              // charCodeAt will check if the "unclean" numbers are from 0-9 (Base-10) and 
+              // concat them to stringedChars variable 
+              // charCodeAt === 48 is 0 and 57 is 9
+           if (flattenedArray[i].charCodeAt(j) >= 48 && flattenedArray[i].charCodeAt(j) <= 57) {
+               // check if the number contains minus in it 45 === "-" and add it to stringed characters
+             if (flattenedArray[i].charCodeAt(j - 1) === 45) {
+               stringedChars += flattenedArray[i][j - 1];
+            }
+            stringedChars += flattenedArray[i][j];
+          } else
+          // If all the other characters are present, push them to stringedChars
+          if (flattenedArray[i].charCodeAt(j) < 48 || flattenedArray[i].charCodeAt(j) > 57) {
+            cleanedArray.push(stringedChars);
+            stringedChars = "";
+          }
+        } 
+        cleanedArray.push(stringedChars);
+        stringedChars = "";
+      }  
     }
-  }
-};
+    for (let i = 0; i < cleanedArray.length; i++) {
+      if (cleanedArray[i] === "") {
+        continue;
+      }
+      gatherAllChars.push(parseInt(cleanedArray[i]));
+    }
+    for (let i = 0; i < gatherAllChars.length; i++) {
+      sumAllChars += gatherAllChars[i];
+    }
+    return sumAllChars;
+  };
 
-sum(["1", "five", "2wenty", "thr33"]);
-sum([
-  ["1X2", "t3n"],
-  ["1024", "5", "64"],
-]);
-sum([[["1"], "10v3"], ["738h"], [["s0"], ["1mu4ch3"], "-1s0"]]);
+console.log(sum(["1", "five", "2wenty", "thr33"]))
+console.log(sum([["1X2", "t3n"],["1024", "5", "64"]]))
+console.log(sum([[["1"], "10v3"], ["738h"], [["s0"], ["1mu4ch3"],"-1s0"]]))
