@@ -47,12 +47,15 @@ const sum = (arr) => {
         stringedChars = "";
       }  
     }
+    // Gather all cleaned characters
     for (let i = 0; i < cleanedArray.length; i++) {
       if (cleanedArray[i] === "") {
         continue;
       }
+      // Push them to the array with clean numbers
       gatherAllChars.push(parseInt(cleanedArray[i]));
     }
+    // Sum all chars
     for (let i = 0; i < gatherAllChars.length; i++) {
       sumAllChars += gatherAllChars[i];
     }
